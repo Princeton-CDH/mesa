@@ -134,7 +134,6 @@ def make_user_input(user_input, k, v):
             step=v.get("step"),
         )
     elif v["type"] == "Select":
-        print("init select")
         solara.Select(
             v.get("label", "label"),
             value=v.get("value"),
