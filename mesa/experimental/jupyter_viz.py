@@ -133,6 +133,13 @@ def make_user_input(user_input, k, v):
             max=v.get("max"),
             step=v.get("step"),
         )
+    elif v["type"] == "Select":
+        print("init select")
+        solara.Select(
+            v.get("label", "label"),
+            value=v.get("value"),
+            values=v.get("values"),
+        )
 
 
 @solara.component
@@ -157,10 +164,12 @@ def MesaComponent(viz, space_drawer=None, play_interval=400):
 
     # 3. Buttons
     playing = solara.use_reactive(False)
+    step = solara.use_reactive(False)
 
     def on_value_play(change):
         if viz.model.running:
             viz.do_step()
+            step.value = viz.model.schedule.steps
         else:
             playing.value = False
 
@@ -183,6 +192,12 @@ def MesaComponent(viz, space_drawer=None, play_interval=400):
             on_value=on_value_play,
             playing=playing.value,
             on_playing=playing.set,
+        )
+        widgets.IntText(
+            value=step.value,
+            description="Step:",
+            disabled=True,
+            interval=play_interval,
         )
         # threaded_do_play is not used for now because it
         # doesn't work in Google colab. We use
