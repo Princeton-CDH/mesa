@@ -88,15 +88,19 @@ class JupyterContainer:
             out["s"] = s
         if len(c) > 0:
             out["c"] = c
+
         return out
 
 
 def make_space(viz):
-    space_fig = Figure()
-    space_ax = space_fig.subplots()
-    space_ax.scatter(**viz.portray(viz.model.grid))
-    space_ax.set_axis_off()
-    solara.FigureMatplotlib(space_fig, dependencies=[viz.model, viz.df])
+    # grid should be optional, since not all models use one
+    # if model has no grid, don't draw an agent space
+    if hasattr(viz.model, "grid"):
+        space_fig = Figure()
+        space_ax = space_fig.subplots()
+        space_ax.scatter(**viz.portray(viz.model.grid))
+        space_ax.set_axis_off()
+        solara.FigureMatplotlib(space_fig, dependencies=[viz.model, viz.df])
 
 
 def make_plot(viz, measure):
